@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pavly Emad Interactive Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-blue: #2F3E7E;
+            --bg-gradient: linear-gradient(135deg, #1A237E 0%, #283593 100%);
+            --gold-color: #FFD700;
+            --text-light: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-gradient);
+            overflow: hidden;
+            font-family: 'Exo 2', sans-serif;
+            position: relative;
+        }
+
+        /* Floating Elements */
+        .floating-elements div {
+            position: absolute;
+            opacity: 0.3;
+            animation: float 8s infinite ease-in-out;
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .floating-elements .triangle {
+            width: 100px;
+            height: 100px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-80px) rotate(180deg) scale(1.4); }
+        }
+
+        /* Profile Section */
+        .profile-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 2;
+        }
+
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px dotted var(--gold-color);
+            border-radius: 50%;
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: rotate 15s linear infinite;
+        }
+
+        .profile-container:hover::before {
+            border-style: solid;
+            border-radius: 20%;
+            animation: none;
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.92);
+            border: 2px solid transparent;
+        }
+
+        .profile-container:hover .profile-img {
+            border-radius: 20%;
+            transform: scale(0.95);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-text {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .main-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 4em;
+            color: var(--text-light);
+            text-shadow: 2px 2px 0 var(--main-blue);
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .main-name::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: var(--gold-color);
+            border-radius: 2px;
+        }
+
+        .sub-text {
+            font-size: 1.6em;
+            color: var(--text-light);
+            font-weight: 400;
+            letter-spacing: 0.8px;
+        }
+
+        /* Mega Popup - Redesigned */
+        .mega-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 85vw;
+            max-width: 1000px;
+            height: auto;
+            max-height: 90vh;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF9E6 100%);
+            border-radius: 25px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1001;
+            border: 4px solid var(--gold-color);
+            pointer-events: none;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: auto auto auto;
+            gap: 20px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(47, 62, 126, 0.3);
+        }
+
+        .mega-popup.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mega-section {
+            background: rgba(255, 215, 0, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: none;
+            border: 2px solid var(--gold-color);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            text-align: center;
+            min-height: 180px;
+        }
+
+        .mega-section:hover {
+            background: rgba(255, 215, 0, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .mega-img {
+            grid-column: 1 / 3;
+            grid-row: 1;
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 15px;
+            border: 3px solid var(--gold-color);
+            box-shadow: 0 10px 30px rgba(47, 62, 126, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .mega-section h3 {
+            color: var(--main-blue);
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.3);
+        }
+
+        .mega-section p {
+            color: var(--main-blue);
+            font-weight: 600;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        /* Popup Modals - Redesigned */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 380px;
+            height: auto;
+            max-height: 90vh;
+            background: linear-gradient(45deg, #FFFFFF, #FFF5CC);
+            border-radius: 20px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1001;
+            border: 3px solid var(--gold-color);
+            pointer-events: none;
+            padding: 30px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(47, 62, 126, 0.25);
+        }
+
+        .popup.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .popup-content {
+            width: 100%;
+            height: auto;
+            max-height: calc(90vh - 60px);
+            overflow-y: auto;
+            color: var(--main-blue);
+            font-size: 1.1em;
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        .popup-content h2 {
+            color: var(--main-blue);
+            border-bottom: 3px solid var(--gold-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .popup-content p {
+            margin-bottom: 15px;
+        }
+
+        .music-player {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 15px;
+        }
+
+        .friend-card {
+            background: rgba(47, 62, 126, 0.1);
+            border: 2px solid var(--main-blue);
+            color: var(--main-blue);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .friend-card:hover {
+            background: rgba(47, 62, 126, 0.2);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--main-blue);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1002;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--gold-color);
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: var(--gold-color);
+            color: white;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mega-popup {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .mega-img {
+                height: auto;
+                max-height: 200px;
+                margin-bottom: 10px;
+            }
+
+            .mega-section {
+                min-height: 140px;
+                padding: 15px;
+            }
+
+            .mega-section h3 {
+                font-size: 1.4em;
+            }
+
+            .mega-section p {
+                font-size: 1em;
+            }
+
+            .popup {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .main-name {
+                font-size: 3em;
+            }
+
+            .sub-text {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 250px;
+                height: 250px;
+            }
+
+            .mega-img {
+                max-height: 150px;
+            }
+
+            .mega-section h3 {
+                font-size: 1.2em;
+            }
+
+            .popup-content {
+                font-size: 0.9em;
+            }
+
+            .music-player {
+                height: 200px;
+            }
+        }
+
+        /* Hide original buttons */
+        .action-buttons {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="triangle" style="top:10%; left:5%; animation-delay:0.5s"></div>
+        <div class="triangle" style="top:70%; right:15%; animation-delay:1s"></div>
+    </div>
+
+    <div class="profile-wrapper">
+        <div class="profile-container">
+            <img src="https://i.ibb.co/pXfwCcv/2d79b46de2deb3744fd330d815b76751.jpg" alt="Profile Image" class="profile-img">
+        </div>
+        <div class="profile-text">
+            <h1 class="main-name">PAVLY EMAD</h1>
+            <p class="sub-text">33 Years | Texas, USA</p>
+        </div>
+    </div>
+
+    <div class="overlay"></div>
+    
+    <!-- Mega Popup - Redesigned -->
+    <div class="mega-popup" id="megaPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <div class="mega-section" onclick="showContent('about')">
+            <h3>Professional Profile</h3>
+            <p>Software Developer<br>10+ Years Experience<br>Texas, USA</p>
+        </div>
+        <div class="mega-section" onclick="showContent('music')">
+            <h3>Music Passion</h3>
+            <p>Guitar Enthusiast<br>Favorite Genres<br>Live Performances</p>
+        </div>
+        <div class="mega-section" onclick="showContent('friends')">
+            <h3>Core Network</h3>
+            <p>5 Trusted Friends<br>Tech Community<br>Collaborations</p>
+        </div>
+    </div>
+
+    <!-- Popup Modals - Redesigned -->
+    <div class="popup" id="aboutPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <div class="popup-content">
+            <h2>Technical Expertise</h2>
+            <p>Full-stack developer specializing in modern web technologies. Focused on creating secure, high-performance applications with intuitive user interfaces.</p>
+            <p>▪ 10+ years professional experience<br>
+               ▪ AWS Certified Developer<br>
+               ▪ React & Node.js Specialist<br>
+               ▪ UI/UX Design Passion</p>
+        </div>
+    </div>
+
+    <div class="popup" id="musicPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <iframe 
+            class="music-player" 
+            src="https://www.youtube.com/embed/mbHGrjZe0B8?autoplay=0&mute=0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="popup" id="friendsPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <div class="popup-content">
+            <h2>Professional Network</h2>
+            <div style="display: grid; gap: 15px; margin-top: 20px;">
+                <div class="friend-card">Leader</div>
+                <div class="friend-card">Dolly</div>
+                <div class="friend-card">Mark</div>
+                <div class="friend-card">Ramiz</div>
+                <div class="friend-card">Karim</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const popups = {
+            mega: document.getElementById('megaPopup'),
+            about: document.getElementById('aboutPopup'),
+            music: document.getElementById('musicPopup'),
+            friends: document.getElementById('friendsPopup'),
+            overlay: document.querySelector('.overlay')
+        }
+
+        function closeAllPopups() {
+            Object.values(popups).forEach(popup => {
+                if (popup.classList) popup.classList.remove('active');
+            });
+        }
+
+        function togglePopup() {
+            closeAllPopups();
+            popups.mega.classList.add('active');
+            popups.overlay.classList.add('active');
+        }
+
+        function showContent(type) {
+            closeAllPopups();
+            popups[type].classList.add('active');
+            popups.overlay.classList.add('active');
+        }
+
+        // Event Listeners
+        document.querySelector('.profile-container').addEventListener('click', togglePopup);
+        document.addEventListener('keydown', (e) => e.key === 'Escape' && closeAllPopups());
+        popups.overlay.addEventListener('click', closeAllPopups);
+    </script>
+</body>
+</html>
