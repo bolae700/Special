@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pavly Emad Interactive Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-blue: #2F3E7E;
+            --bg-gradient: linear-gradient(135deg, #1A237E 0%, #283593 100%);
+            --gold-color: #FFD700;
+            --text-light: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-gradient);
+            overflow: hidden;
+            font-family: 'Exo 2', sans-serif;
+            position: relative;
+        }
+
+        /* Floating Elements */
+        .floating-elements div {
+            position: absolute;
+            opacity: 0.3;
+            animation: float 8s infinite ease-in-out;
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .floating-elements .triangle {
+            width: 100px;
+            height: 100px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-80px) rotate(180deg) scale(1.4); }
+        }
+
+        /* Profile Section */
+        .profile-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 2;
+        }
+
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px dotted var(--gold-color);
+            border-radius: 50%;
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: rotate 15s linear infinite;
+        }
+
+        .profile-container:hover::before {
+            border-style: solid;
+            border-radius: 20%;
+            animation: none;
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.92);
+            border: 2px solid transparent;
+        }
+
+        .profile-container:hover .profile-img {
+            border-radius: 20%;
+            transform: scale(0.95);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-text {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .main-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 4em;
+            color: var(--text-light);
+            text-shadow: 2px 2px 0 var(--main-blue);
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .main-name::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: var(--gold-color);
+            border-radius: 2px;
+        }
+
+        .sub-text {
+            font-size: 1.6em;
+            color: var(--text-light);
+            font-weight: 400;
+            letter-spacing: 0.8px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            position: fixed;
+            bottom: 120px; /* تم التعديل إلى الأعلى */
+            display: flex;
+            gap: 20px;
+            z-index: 999;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--text-light);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 2px solid var(--gold-color);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Popup Modals */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 380px;
+            height: 380px;
+            background: rgba(8, 17, 26, 0.98);
+            border-radius: 20%;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1001;
+            border: 2px solid var(--gold-color);
+            pointer-events: none;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .popup.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .popup-content {
+            width: 100%;
+            height: 100%;
+            overflow-y: hidden;
+            color: var(--text-light);
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .music-player {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 20%;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-light);
+            background: rgba(8, 17, 26, 0.95);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1002;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* Added for image popup */
+        .popup-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20%;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="triangle" style="top:10%; left:5%; animation-delay:0.5s"></div>
+        <div class="triangle" style="top:70%; right:15%; animation-delay:1s"></div>
+    </div>
+
+    <div class="profile-wrapper">
+        <div class="profile-container">
+            <img src="https://i.ibb.co/pXfwCcv/2d79b46de2deb3744fd330d815b76751.jpg" alt="Profile Image" class="profile-img">
+        </div>
+        <div class="profile-text">
+            <h1 class="main-name">PAVLY EMAD</h1>
+            <p class="sub-text">33 Years | Texas, USA</p>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="action-btn" onclick="togglePopup('about')">About Me</button>
+        <button class="action-btn" onclick="togglePopup('music')">Play Music</button>
+        <button class="action-btn" onclick="togglePopup('friends')">Friends</button>
+    </div>
+
+    <div class="overlay"></div>
+    
+    <!-- Profile Image Popup -->
+    <div class="popup" id="imagePopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <img src="https://i.ibb.co/pXfwCcv/2d79b46de2deb3744fd330d815b76751.jpg" alt="Enlarged Profile" class="popup-img">
+    </div>
+
+    <!-- About Me Popup -->
+    <div class="popup" id="aboutPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <div class="popup-content">
+            <h2 style="color: var(--gold-color); margin-bottom: 20px;">About Pavly Emad</h2>
+            <p>Professional software developer with 10+ years of experience in full-stack development. Specialized in creating interactive web applications with cutting-edge technologies. Passionate about UI/UX design and creating memorable digital experiences.</p>
+            <p>🏆 Award-winning developer<br>
+            🌍 Based in Texas, USA<br>
+            🎯 Focus on performance & security<br>
+            🎸 Guitar enthusiast & music lover</p>
+        </div>
+    </div>
+
+    <!-- Music Player Popup -->
+    <div class="popup" id="musicPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <iframe 
+            class="music-player" 
+            src="https://www.youtube.com/embed/mbHGrjZe0B8?autoplay=0&mute=0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Friends Popup -->
+    <div class="popup" id="friendsPopup">
+        <span class="close-btn" onclick="closeAllPopups()">×</span>
+        <div class="popup-content">
+            <h2 style="color: var(--gold-color); margin-bottom: 20px;">My Friends</h2>
+            <div style="display: grid; gap: 15px;">
+                <div class="friend-card">👑 Leader</div>
+                <div class="friend-card">🎀 Dolly</div>
+                <div class="friend-card">💻 Mark</div>
+                <div class="friend-card">🎨 Ramiz</div>
+                <div class="friend-card">🚀 Karim</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const popups = {
+            image: document.getElementById('imagePopup'),
+            about: document.getElementById('aboutPopup'),
+            music: document.getElementById('musicPopup'),
+            friends: document.getElementById('friendsPopup'),
+            overlay: document.querySelector('.overlay')
+        }
+
+        function closeAllPopups() {
+            Object.values(popups).forEach(popup => {
+                if (popup.classList) popup.classList.remove('active');
+            });
+            popups.overlay.classList.remove('active');
+        }
+
+        function togglePopup(type) {
+            closeAllPopups();
+            if (type && popups[type]) {
+                popups[type].classList.add('active');
+                popups.overlay.classList.add('active');
+            }
+        }
+
+        // Event Listeners
+        document.querySelector('.profile-container').addEventListener('click', () => togglePopup('image'));
+        document.addEventListener('keydown', (e) => e.key === 'Escape' && closeAllPopups());
+        popups.overlay.addEventListener('click', closeAllPopups);
+    </script>
+</body>
+</html>
